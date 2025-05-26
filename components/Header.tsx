@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import DropdownList from '@/components/DropdownList';
+import { ICONS } from '@/constants';
 
 const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
 	return (
@@ -26,7 +27,7 @@ const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
 				<aside>
 					<Link href='/upload'>
 						<Image
-							src='/assets/icons/upload.svg'
+							src={ICONS.upload}
 							alt='upload'
 							width={16}
 							height={16}
@@ -36,7 +37,7 @@ const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
 					<div className='record'>
 						<button className='primary-btn'>
 							<Image
-								src='/assets/icons/record.svg'
+								src={ICONS.record}
 								alt='record'
 								width={16}
 								height={16}

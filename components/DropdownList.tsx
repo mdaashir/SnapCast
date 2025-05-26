@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { filterOptions } from '@/constants';
 
 const DropdownList = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +30,7 @@ const DropdownList = () => {
 
 			{isOpen && (
 				<ul className='dropdown'>
-					{['Most Recent', 'Most Liked'].map((option) => (
+					{filterOptions.map((option) => (
 						<li key={option} className='list-item'>
 							{option}
 						</li>
