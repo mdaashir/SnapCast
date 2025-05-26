@@ -10,7 +10,7 @@ const page = () => {
 				<VideoCard
 					id='1'
 					title='SnapChat Messsage'
-					thumbnail='/assets/samples/thumbnail (1).png'
+					thumbnail='/assets/images/video.png'
 					createdAt={new Date('2025-05-25 00:00:00.000')}
 					userImg='/assets/images/jason.png'
 					username='jason'
@@ -21,7 +21,7 @@ const page = () => {
 				<VideoCard
 					id='1'
 					title='SnapChat Messsage'
-					thumbnail='/assets/samples/thumbnail (1).png'
+					thumbnail='/assets/images/video.png'
 					createdAt={new Date('2025-05-25 00:00:00.000')}
 					userImg='/assets/images/jason.png'
 					username='jason'
@@ -32,7 +32,7 @@ const page = () => {
 				<VideoCard
 					id='1'
 					title='SnapChat Messsage'
-					thumbnail='/assets/samples/thumbnail (1).png'
+					thumbnail='/assets/images/video.png'
 					createdAt={new Date('2025-05-25 00:00:00.000')}
 					userImg='/assets/images/jason.png'
 					username='jason'
@@ -43,7 +43,7 @@ const page = () => {
 				<VideoCard
 					id='1'
 					title='SnapChat Messsage'
-					thumbnail='/assets/samples/thumbnail (1).png'
+					thumbnail='/assets/images/video.png'
 					createdAt={new Date('2025-05-25 00:00:00.000')}
 					userImg='/assets/images/jason.png'
 					username='jason'
