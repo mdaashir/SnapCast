@@ -1,13 +1,45 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import RecordScreen from './RecordScreen';
+import { updateURLParams } from '@/lib/utils';
 import DropdownList from '@/components/DropdownList';
 import { ICONS } from '@/constants';
 
 const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+
+	const [searchQuery, setSearchQuery] = useState(
+		searchParams.get('query') || ''
+	);
+
+	useEffect(() => {
+		setSearchQuery(searchParams.get('query') || '');
+	}, [searchParams]);
+
+	useEffect(() => {
+		const debounceTimer = setTimeout(() => {
+			if (searchQuery !== searchParams.get('query')) {
+				const url = updateURLParams(
+					searchParams,
+					{ query: searchQuery || null },
+					pathname
+				);
+				router.push(url);
+			}
+		}, 500);
+		return () => clearTimeout(debounceTimer);
+	}, [searchQuery, searchParams, pathname, router]);
+
 	return (
 		<header className='header'>
 			<section className='header-container'>
-				<div className='details'>
+				<figure className='details'>
 					{userImg && (
 						<Image
 							src={userImg}
@@ -22,7 +54,7 @@ const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
 						<p>{subHeader}</p>
 						<h1>{title}</h1>
 					</article>
-				</div>
+				</figure>
 
 				<aside>
 					<Link href='/upload'>
@@ -34,17 +66,7 @@ const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
 						/>
 						<span>Upload a video</span>
 					</Link>
-					<div className='record'>
-						<button className='primary-btn'>
-							<Image
-								src={ICONS.record}
-								alt='record'
-								width={16}
-								height={16}
-							/>
-							<span>Record a video</span>
-						</button>
-					</div>
+					<RecordScreen />
 				</aside>
 			</section>
 
@@ -53,6 +75,8 @@ const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
 					<input
 						type='text'
 						placeholder='Search for videos, tags, folders ...'
+						value={searchQuery}
+						onChange={(e) => setSearchQuery(e.target.value)}
 					/>
 					<Image
 						src='/assets/icons/search.svg'
