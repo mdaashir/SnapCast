@@ -4,6 +4,8 @@ import {ilike, sql} from "drizzle-orm";
 import {DEFAULT_RECORDING_CONFIG, DEFAULT_VIDEO_CONFIG} from "@/constants";
 import {videos} from "@/drizzle/schema";
 
+const library_id = process.env.BUNNY_LIBRARY_ID;
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -300,7 +302,7 @@ export function daysAgo(inputDate: Date): string {
 }
 
 export const createIframeLink = (videoId: string) =>
-  `https://iframe.mediadelivery.net/embed/421422/${videoId}?autoplay=true&preload=true`;
+  `https://iframe.mediadelivery.net/embed/${library_id}/${videoId}?autoplay=true&preload=true`;
 
 export const doesTitleMatch = (videos: any, searchQuery: string) =>
   ilike(
