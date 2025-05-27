@@ -1,95 +1,133 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import RecordScreen from './RecordScreen';
-import { updateURLParams } from '@/lib/utils';
-import DropdownList from '@/components/DropdownList';
-import { ICONS } from '@/constants';
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {useEffect, useState} from "react";
+import {updateURLParams} from "@/lib/utils";
+import Image from "next/image";
+import {DropdownList, ImageWithFallback} from "@/components/index";
+import Link from "next/link";
+import {filterOptions, ICONS} from "@/constants";
+import RecordScreen from "@/components/RecordScreen";
 
-const Header = ({ subHeader, title, userImg }: SharedHeaderProps) => {
-	const router = useRouter();
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
+const Header = ({subHeader, title, userImg}: SharedHeaderProps) => {
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
-	const [searchQuery, setSearchQuery] = useState(
-		searchParams.get('query') || ''
-	);
+    const [searchQuery, setSearchQuery] = useState(
+        searchParams.get('query') || ''
+    );
+    const [selectedFilter, setSelectedFilter] = useState(
+        searchParams.get('filter') || 'Most Recent'
+    );
 
-	useEffect(() => {
-		setSearchQuery(searchParams.get('query') || '');
-	}, [searchParams]);
+    useEffect(() => {
+        setSearchQuery(searchParams.get('query') || '');
+        setSelectedFilter(searchParams.get('filter') || 'Most Recent');
+    }, [searchParams]);
 
-	useEffect(() => {
-		const debounceTimer = setTimeout(() => {
-			if (searchQuery !== searchParams.get('query')) {
-				const url = updateURLParams(
-					searchParams,
-					{ query: searchQuery || null },
-					pathname
-				);
-				router.push(url);
-			}
-		}, 500);
-		return () => clearTimeout(debounceTimer);
-	}, [searchQuery, searchParams, pathname, router]);
+    useEffect(() => {
+        const debounceTimer = setTimeout(() => {
+            if (searchQuery !== searchParams.get('query')) {
+                const url = updateURLParams(
+                    searchParams,
+                    {query: searchQuery || null},
+                    pathname
+                );
+                router.push(url);
+            }
+        }, 500);
+        return () => clearTimeout(debounceTimer);
+    }, [searchQuery, searchParams, pathname, router]);
 
-	return (
-		<header className='header'>
-			<section className='header-container'>
-				<figure className='details'>
-					{userImg && (
-						<Image
-							src={userImg}
-							alt='user'
-							width={66}
-							height={66}
-							className='rounded-full'
-						/>
-					)}
+    const handleFilterChange = (filter: string) => {
+        setSelectedFilter(filter);
+        const url = updateURLParams(
+            searchParams,
+            {filter: filter || null},
+            pathname
+        );
+        router.push(url);
+    };
 
-					<article>
-						<p>{subHeader}</p>
-						<h1>{title}</h1>
-					</article>
-				</figure>
+    const renderFilterTrigger = () => (
+        <div className='filter-trigger'>
+            <figure>
+                <Image
+                    src='/assets/icons/hamburger.svg'
+                    alt='hamburger'
+                    width={14}
+                    height={14}
+                />
+                <span>{selectedFilter}</span>
+            </figure>
+            <Image
+                src='/assets/icons/arrow-down.svg'
+                alt='arrow-down'
+                width={20}
+                height={20}
+            />
+        </div>
+    );
 
-				<aside>
-					<Link href='/upload'>
-						<Image
-							src={ICONS.upload}
-							alt='upload'
-							width={16}
-							height={16}
-						/>
-						<span>Upload a video</span>
-					</Link>
-					<RecordScreen />
-				</aside>
-			</section>
+    return (
+        <header className='header'>
+            <section className='header-container'>
+                <figure className='details'>
+                    {userImg && (
+                        <ImageWithFallback
+                            src={userImg}
+                            alt='user'
+                            width={66}
+                            height={66}
+                            className='rounded-full'
+                        />
+                    )}
 
-			<section className='search-filter'>
-				<div className='search'>
-					<input
-						type='text'
-						placeholder='Search for videos, tags, folders ...'
-						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
-					/>
-					<Image
-						src='/assets/icons/search.svg'
-						alt='search'
-						width={16}
-						height={16}
-					/>
-				</div>
+                    <article>
+                        <p>{subHeader}</p>
+                        <h1>{title}</h1>
+                    </article>
+                </figure>
 
-				<DropdownList />
-			</section>
-		</header>
-	);
+                <aside>
+                    <Link href='/upload'>
+                        <Image
+                            src={ICONS.upload}
+                            alt='upload'
+                            width={16}
+                            height={16}
+                        />
+                        <span>Upload a video</span>
+                    </Link>
+                    <RecordScreen/>
+                </aside>
+            </section>
+
+            <section className='search-filter'>
+                <div className='search'>
+                    <input
+                        type='text'
+                        placeholder='Search for videos, tags, folders ...'
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <Image
+                        src='/assets/icons/search.svg'
+                        alt='search'
+                        width={16}
+                        height={16}
+                    />
+                </div>
+                <DropdownList
+                    options={filterOptions}
+                    selectedOption={selectedFilter}
+                    onOptionSelect={handleFilterChange}
+                    triggerElement={renderFilterTrigger()}
+                />
+            </section>
+        </header>
+    );
 };
 
 export default Header;
